@@ -1,0 +1,8 @@
+# Azure Deployment
+AZURE_SUBSCRIPTION_ID=cccccccc-cccc-cccc-cccc-cccccccccccc
+AZURE_TENANT_ID=dddddddd-dddd-dddd-dddd-dddddddddddd
+AZURE_RESOURCE_GROUP=my-resourcegroup-2342934563
+AZURE_LOCATION=swedencentral
+AZURE_APP_NAME=my-webapp-934238764295
+AZURE_PYTHON_VERSION=3.11
+AZURE_APP_SERVICE_PLAN=appservice-plan
