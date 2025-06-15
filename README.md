@@ -147,16 +147,9 @@ pause
 #### Manual Installation (Alternative)
 If you prefer to install dependencies manually:
 ```cmd
-cd /d "e:\dev\Minimal-Azure-WebApp-Python"
+cd /d "<YOUR_LOCAL_PROJECT_PATH>"
 pip install -r ./src/requirements.txt
 ```
-
-#### Verification
-To verify installation was successful:
-```cmd
-pip list
-```
-You should see Flask and gunicorn in the output.
 
 ## Environment Configuration
 
@@ -204,7 +197,7 @@ To find your Azure Subscription ID and Tenant ID:
    - Go to https://portal.azure.com
    - Navigate to "Subscriptions"
    - Copy the Subscription ID
-   - Navigate to "Azure Active Directory"
+   - Navigate to "Microsoft Entra ID"
    - Copy the Tenant ID
 
 2. **Using Azure CLI**:
@@ -219,8 +212,6 @@ Common Azure locations:
 - `swedencentral` (Sweden Central)
 - `eastus` (East US)
 - `westeurope` (West Europe)
-- `southeastasia` (Southeast Asia)
-- `australiaeast` (Australia East)
 
 #### Step 5: Ensure Unique App Name
 
@@ -252,33 +243,10 @@ The project includes automated scripts to create all necessary Azure resources f
    - The script will pause for confirmation before proceeding
    - Press any key to continue when prompted
 
-#### What the script does:
-
-```batch
-@echo off
-set PWSH="C:\Program Files\PowerShell\7\pwsh.exe"
-
-if not exist %PWSH% (
-    echo ERROR: PowerShell 7 not found at '%PWSH%'
-    echo Please install PowerShell 7 from: https://github.com/PowerShell/PowerShell/releases
-    pause
-    exit /b 1
-)
-
-echo This will create the web app in Azure based on the configuration in the .env file
-pause
-
-rem change to folder where BAT file is
-cd /d "%~dp0"
-set SCRIPT=%~dp0CreateAzureWebApp.ps1
-
-rem unblock the PowerShell script first
-%PWSH% -Command "Unblock-File -Path %SCRIPT%"
-
-rem now run the script with PowerShell 7
-%PWSH% -f %SCRIPT%
-pause
-```
+3. **What it does**:
+   - Checks if PowerShell 7 is installed
+   - Unblocks all *.ps1 files
+   - Runs CreateAzureWebApp.ps1 with PowerShell 7
 
 ### Step 3: PowerShell Script Execution (CreateAzureWebApp.ps1)
 
@@ -371,33 +339,10 @@ After creating the Azure Web App, you need to deploy your application code. The 
    - The script will pause for confirmation before proceeding
    - Press any key to continue when prompted
 
-#### What the script does:
-
-```batch
-@echo off
-set PWSH="C:\Program Files\PowerShell\7\pwsh.exe"
-
-if not exist %PWSH% (
-    echo ERROR: PowerShell 7 not found at '%PWSH%'
-    echo Please install PowerShell 7 from: https://github.com/PowerShell/PowerShell/releases
-    pause
-    exit /b 1
-)
-
-echo This will zip the source code and deploy it to the Azure Web App
-pause
-
-rem change to folder where BAT file is
-cd /d "%~dp0"
-set SCRIPT=%~dp0DeployAzureWebApp.ps1
-
-rem unblock the PowerShell script first
-%PWSH% -Command "Unblock-File -Path %SCRIPT%"
-
-rem now run the script with PowerShell 7
-%PWSH% -f %SCRIPT%
-pause
-```
+3. **What it does**:
+   - Checks if PowerShell 7 is installed
+   - Unblocks all *.ps1 files
+   - Runs DeployAzureWebApp.ps1 with PowerShell 7
 
 ### Step 3: PowerShell Script Execution (DeployAzureWebApp.ps1)
 
@@ -471,103 +416,6 @@ If deployment fails:
    ```cmd
    az webapp config show --name "your-app-name" --resource-group "your-resource-group" --query "appCommandLine"
    ```
-
-### File Descriptions
-
-#### Application Files
-- **`src/app.py`**: Main Flask application with multiple endpoints
-- **`src/requirements.txt`**: Python package dependencies
-
-#### Configuration Files
-- **`.env`**: Environment variables for Azure configuration (you create this)
-- **`env-file-template.txt`**: Template showing required environment variables
-
-#### Automation Scripts
-- **`InstallDependencies.bat`**: Installs Python dependencies from requirements.txt
-- **`CreateAzureWebApp.bat`**: Windows batch file to create Azure resources
-- **`CreateAzureWebApp.ps1`**: PowerShell script for creating Azure resources
-- **`DeployAzureWebApp.bat`**: Windows batch file to deploy the application
-- **`DeployAzureWebApp.ps1`**: PowerShell script for deploying the application
-
-#### Documentation
-- **`README.md`**: Basic project overview
-- **`DOCUMENTATION.md`**: This comprehensive documentation
-- **`LICENSE`**: MIT license file
-
-## Troubleshooting
-
-### Common Issues and Solutions
-
-#### 1. PowerShell 7 Not Found
-**Error**: `ERROR: PowerShell 7 not found at 'C:\Program Files\PowerShell\7\pwsh.exe'`
-
-**Solution**:
-1. Download PowerShell 7 from: https://github.com/PowerShell/PowerShell/releases
-2. Install to the default location
-3. Restart your command prompt/terminal
-
-#### 2. Azure Authentication Issues
-**Error**: `Please run 'az login' to setup account.`
-
-**Solution**:
-```cmd
-az login
-az account set --subscription "your-subscription-id"
-```
-
-#### 3. App Name Already Exists
-**Error**: `The app name 'your-app-name' is already taken`
-
-**Solution**:
-1. Choose a more unique app name
-2. Update `AZURE_APP_NAME` in your `.env` file
-3. Try adding random numbers or your initials
-
-#### 4. Insufficient Azure Permissions
-**Error**: `You do not have permission to create resources`
-
-**Solution**:
-1. Contact your Azure administrator
-2. Ensure you have Contributor role on the subscription
-3. Or create resources in a resource group where you have permissions
-
-#### 5. Python Dependencies Installation Failed
-**Error**: `pip install failed`
-
-**Solution**:
-1. Ensure Python is installed and in PATH
-2. Try upgrading pip: `python -m pip install --upgrade pip`
-3. Check internet connectivity
-4. Try installing packages individually
-
-#### 6. Deployment Package Too Large
-**Error**: `Deployment package exceeds size limit`
-
-**Solution**:
-1. Remove unnecessary files from `src/` directory
-2. Check for large files or directories
-3. Ensure only essential files are included
-
-#### 7. Web App Not Starting
-**Error**: Web app shows error page after deployment
-
-**Solution**:
-1. Check application logs:
-   ```cmd
-   az webapp log tail --name "your-app-name" --resource-group "your-resource-group"
-   ```
-2. Verify startup command is correct
-3. Check that `app.py` contains the Flask app variable
-4. Ensure all dependencies are in requirements.txt
-
-### Getting Help
-
-If you encounter issues not covered here:
-
-1. **Check Azure Portal**: Look at the App Service logs and metrics
-2. **Azure CLI Logs**: Use `az webapp log` commands to see detailed logs
-3. **PowerShell Verbose**: Add `-Verbose` flag to PowerShell commands
-4. **Azure Documentation**: Visit https://docs.microsoft.com/en-us/azure/app-service/
 
 ## Additional Resources
 
